@@ -12,4 +12,6 @@ public interface IUserDao {
     Optional<User> findById(int userId);
 
     Optional<User> findProfile();
+
+    Optional<User> findByEmail(String email);
 }

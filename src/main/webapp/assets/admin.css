@@ -205,6 +205,119 @@ th {
     max-width: none;
 }
 
+.auth-page {
+    max-width: 620px;
+}
+
+.auth-form {
+    max-width: none;
+}
+
+.form-link {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.product-card {
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.product-card a {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+    color: inherit;
+    text-decoration: none;
+}
+
+.product-card__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #f8fafc;
+}
+
+.product-card__name {
+    font-weight: 700;
+}
+
+.product-card__meta {
+    color: #64748b;
+    font-size: 14px;
+}
+
+.product-card__price {
+    color: #0f3d68;
+    font-weight: 700;
+}
+
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.pagination a {
+    min-width: 36px;
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: #334155;
+    text-align: center;
+    text-decoration: none;
+    background: #ffffff;
+}
+
+.pagination a.active {
+    color: #ffffff;
+    border-color: #2563eb;
+    background: #2563eb;
+}
+
+.product-detail {
+    display: grid;
+    grid-template-columns: minmax(260px, 420px) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.product-detail__image {
+    width: 100%;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f8fafc;
+}
+
+.product-detail__body {
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.product-category {
+    margin-top: 0;
+    color: #64748b;
+}
+
+.product-price {
+    color: #0f3d68;
+    font-size: 24px;
+    font-weight: 700;
+}
+
 @media (max-width: 720px) {
     .topbar,
     .toolbar,
@@ -214,7 +327,8 @@ th {
         flex-direction: column;
     }
 
-    .profile-panel {
+    .profile-panel,
+    .product-detail {
         display: flex;
     }
 

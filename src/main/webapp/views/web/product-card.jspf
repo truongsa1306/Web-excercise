@@ -1,0 +1,19 @@
+<c:set var="imageValue" value="${product.images}"/>
+<c:choose>
+    <c:when test="${not empty imageValue and (fn:startsWith(imageValue, 'http://') or fn:startsWith(imageValue, 'https://'))}">
+        <c:set var="imgUrl" value="${imageValue}"/>
+    </c:when>
+    <c:otherwise>
+        <c:url value="/image" var="imgUrl">
+            <c:param name="fname" value="${imageValue}"/>
+        </c:url>
+    </c:otherwise>
+</c:choose>
+<article class="product-card">
+    <a href="<c:url value='/product/detail?id=${product.productId}'/>">
+        <img class="product-card__image" src="${imgUrl}" alt="${product.productName}">
+        <span class="product-card__name">${product.productName}</span>
+        <span class="product-card__meta">${empty product.category ? '' : product.category.categoryname}</span>
+        <span class="product-card__price">${product.price}</span>
+    </a>
+</article>

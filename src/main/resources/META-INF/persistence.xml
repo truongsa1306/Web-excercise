@@ -9,6 +9,7 @@
         <class>com.WebExcersise.entity.Category</class>
         <class>com.WebExcersise.entity.Video</class>
         <class>com.WebExcersise.entity.User</class>
+        <class>com.WebExcersise.entity.Product</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
             <property name="jakarta.persistence.jdbc.url"
@@ -28,6 +29,7 @@
         <class>com.WebExcersise.entity.Category</class>
         <class>com.WebExcersise.entity.Video</class>
         <class>com.WebExcersise.entity.User</class>
+        <class>com.WebExcersise.entity.Product</class>
         <properties>
             <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/servletjpa?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC"/>

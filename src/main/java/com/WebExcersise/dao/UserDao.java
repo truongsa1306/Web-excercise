@@ -5,6 +5,7 @@ import com.WebExcersise.config.JpaConfig;
 import com.WebExcersise.entity.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 
 import java.util.Optional;
 
@@ -69,6 +70,20 @@ public class UserDao implements IUserDao {
                     .setMaxResults(1)
                     .getResultStream()
                     .findFirst();
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        EntityManager entityManager = JpaConfig.getEntityManager(databaseType);
+        try {
+            return Optional.of(entityManager.createNamedQuery("User.findByEmail", User.class)
+                    .setParameter("email", email)
+                    .getSingleResult());
+        } catch (NoResultException exception) {
+            return Optional.empty();
         } finally {
             entityManager.close();
         }

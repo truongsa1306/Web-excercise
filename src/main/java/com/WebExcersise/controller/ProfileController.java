@@ -27,7 +27,10 @@ public class ProfileController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         configureEncoding(request, response);
-        User user = userService.getProfile();
+        User user = getCurrentUser(request, response);
+        if (user == null) {
+            return;
+        }
         request.setAttribute("user", user);
         request.getRequestDispatcher("/views/web/profile.jsp").forward(request, response);
     }
@@ -37,9 +40,10 @@ public class ProfileController extends HttpServlet {
         configureEncoding(request, response);
 
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            User user = userService.findById(userId)
-                    .orElseThrow(() -> new IllegalArgumentException("Khong tim thay user id: " + userId));
+            User user = getCurrentUser(request, response);
+            if (user == null) {
+                return;
+            }
 
             String oldImage = user.getImages();
             user.setFullName(request.getParameter("fullName"));
@@ -54,6 +58,7 @@ public class ProfileController extends HttpServlet {
             }
 
             userService.update(user);
+            request.getSession().setAttribute("currentUserName", user.getFullName());
             if (!Objects.equals(oldImage, user.getImages())) {
                 FileUploadUtil.deleteLocalImage(oldImage, UploadConfig.UPLOAD_DIR);
             }
@@ -62,10 +67,30 @@ public class ProfileController extends HttpServlet {
             request.setAttribute("user", user);
         } catch (RuntimeException | IOException exception) {
             request.setAttribute("error", exception.getMessage());
-            request.setAttribute("user", userService.getProfile());
+            User user = getCurrentUser(request, response);
+            if (user == null) {
+                return;
+            }
+            request.setAttribute("user", user);
         }
 
         request.getRequestDispatcher("/views/web/profile.jsp").forward(request, response);
+    }
+
+    private User getCurrentUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Object currentUserId = request.getSession().getAttribute("currentUserId");
+        if (!(currentUserId instanceof Number number)) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return null;
+        }
+
+        User user = userService.findById(number.intValue()).orElse(null);
+        if (user == null) {
+            request.getSession().invalidate();
+            response.sendRedirect(request.getContextPath() + "/login");
+            return null;
+        }
+        return user;
     }
 
     private void configureEncoding(HttpServletRequest request, HttpServletResponse response) throws IOException {
