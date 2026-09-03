@@ -6,6 +6,7 @@
         <nav class="site-nav" aria-label="Main navigation">
             <a href="<c:url value='/admin/categories'/>">Categories</a>
             <a href="<c:url value='/admin/videos'/>">Videos</a>
+            <a href="<c:url value='/profile'/>">Profile</a>
         </nav>
     </div>
 </header>

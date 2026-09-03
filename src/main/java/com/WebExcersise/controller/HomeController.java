@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"", "/"})
+@WebServlet(urlPatterns = "")
 public class HomeController extends HttpServlet {
     private static final long serialVersionUID = 1L;
 

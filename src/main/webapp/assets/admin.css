@@ -157,12 +157,65 @@ th {
     background: #fff1f2;
 }
 
+.success {
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #bbf7d0;
+    border-radius: 6px;
+    color: #166534;
+    background: #f0fdf4;
+}
+
+.profile-panel {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+.profile-preview {
+    display: grid;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #ffffff;
+}
+
+.profile-preview h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+}
+
+.profile-preview p {
+    margin: 0;
+    color: #64748b;
+}
+
+.profile-avatar {
+    width: 140px;
+    height: 140px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    object-fit: cover;
+    background: #f8fafc;
+}
+
+.profile-form {
+    max-width: none;
+}
+
 @media (max-width: 720px) {
     .topbar,
     .toolbar,
-    .search {
+    .search,
+    .profile-panel {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .profile-panel {
+        display: flex;
     }
 
     table {

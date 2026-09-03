@@ -3,5 +3,5 @@
     <mapping path="/assets/*" exclude="true"/>
     <mapping path="/image" exclude="true"/>
     <mapping path="/api/*" exclude="true"/>
-    <mapping path="/*" decorator="/WEB-INF/decorators/web.jsp"/>
+    <mapping path="/*" decorator="web.jsp"/>
 </sitemesh>
