@@ -120,6 +120,9 @@ public class UserServiceImpl implements IUserService {
         if (user.getFullName() == null || user.getFullName().isBlank()) {
             throw new IllegalArgumentException("Ho ten khong duoc rong");
         }
+        if (user.getFullName().trim().length() > 100) {
+            throw new IllegalArgumentException("Ho ten khong duoc vuot qua 100 ky tu");
+        }
         if (user.getPhone() != null && user.getPhone().length() > 20) {
             throw new IllegalArgumentException("So dien thoai khong duoc vuot qua 20 ky tu");
         }
@@ -129,7 +132,10 @@ public class UserServiceImpl implements IUserService {
         if (fullName == null || fullName.isBlank()) {
             throw new IllegalArgumentException("Ho ten khong duoc rong");
         }
-        if (email == null || email.isBlank() || !email.contains("@")) {
+        if (fullName.trim().length() > 100) {
+            throw new IllegalArgumentException("Ho ten khong duoc vuot qua 100 ky tu");
+        }
+        if (email == null || email.isBlank() || !email.contains("@") || email.trim().length() > 120) {
             throw new IllegalArgumentException("Email khong hop le");
         }
         if (password == null || password.length() < 3) {

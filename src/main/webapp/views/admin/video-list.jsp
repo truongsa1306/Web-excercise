@@ -21,7 +21,7 @@
     <div class="toolbar">
         <a class="button" href="<c:url value='/admin/video/add'/>">Add Video</a>
         <form class="search" action="<c:url value='/admin/videos'/>" method="get">
-            <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="Search video title">
+            <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="Search video title" maxlength="500">
             <button type="submit">Search</button>
         </form>
     </div>

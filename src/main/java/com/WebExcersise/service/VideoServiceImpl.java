@@ -77,8 +77,29 @@ public class VideoServiceImpl implements IVideoService {
         if (video.getVideoId() == null || video.getVideoId().isBlank()) {
             throw new IllegalArgumentException("Video id khong duoc rong");
         }
+        if (video.getVideoId().trim().length() > 50) {
+            throw new IllegalArgumentException("Video id khong duoc vuot qua 50 ky tu");
+        }
         if (video.getTitle() == null || video.getTitle().isBlank()) {
             throw new IllegalArgumentException("Tieu de video khong duoc rong");
+        }
+        if (video.getTitle().trim().length() > 500) {
+            throw new IllegalArgumentException("Tieu de video khong duoc vuot qua 500 ky tu");
+        }
+        if (video.getDescription() != null && video.getDescription().trim().length() > 500) {
+            throw new IllegalArgumentException("Mo ta khong duoc vuot qua 500 ky tu");
+        }
+        if (video.getPoster() != null && video.getPoster().trim().length() > 500) {
+            throw new IllegalArgumentException("Link poster khong duoc vuot qua 500 ky tu");
+        }
+        if (video.getCategory() == null) {
+            throw new IllegalArgumentException("Vui long chon danh muc");
+        }
+        if (video.getViews() < 0) {
+            throw new IllegalArgumentException("Luot xem khong duoc am");
+        }
+        if (video.getActive() != 0 && video.getActive() != 1) {
+            throw new IllegalArgumentException("Trang thai khong hop le");
         }
     }
 }

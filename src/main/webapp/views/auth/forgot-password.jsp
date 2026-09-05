@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!doctype html>
 <html lang="vi">
 <head>
@@ -23,7 +24,11 @@
     <form class="form auth-form" action="<c:url value='/forgot-password'/>" method="post">
         <div class="field">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" value="${email}" required>
+            <input class="${not empty errors.email ? 'invalid' : ''}" type="email" id="email" name="email"
+                   value="${fn:escapeXml(email)}" maxlength="120" required>
+            <c:if test="${not empty errors.email}">
+                <span class="field-error">${errors.email}</span>
+            </c:if>
         </div>
         <button type="submit">Send OTP</button>
     </form>

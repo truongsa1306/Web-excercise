@@ -50,12 +50,20 @@
 
             <div class="field">
                 <label for="fullName">Full name</label>
-                <input type="text" id="fullName" name="fullName" value="${fn:escapeXml(user.fullName)}" required>
+                <input class="${not empty errors.fullName ? 'invalid' : ''}" type="text" id="fullName" name="fullName"
+                       value="${fn:escapeXml(user.fullName)}" maxlength="100" required>
+                <c:if test="${not empty errors.fullName}">
+                    <span class="field-error">${errors.fullName}</span>
+                </c:if>
             </div>
 
             <div class="field">
                 <label for="phone">Phone</label>
-                <input type="text" id="phone" name="phone" value="${fn:escapeXml(user.phone)}" maxlength="20">
+                <input class="${not empty errors.phone ? 'invalid' : ''}" type="text" id="phone" name="phone"
+                       value="${fn:escapeXml(user.phone)}" maxlength="20" pattern="[0-9+() .-]{0,20}">
+                <c:if test="${not empty errors.phone}">
+                    <span class="field-error">${errors.phone}</span>
+                </c:if>
             </div>
 
             <div class="field">

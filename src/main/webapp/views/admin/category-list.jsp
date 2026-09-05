@@ -21,7 +21,7 @@
     <div class="toolbar">
         <a class="button" href="<c:url value='/admin/category/add'/>">Add Category</a>
         <form class="search" action="<c:url value='/admin/categories'/>" method="get">
-            <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="Search category name">
+            <input type="text" name="keyword" value="${fn:escapeXml(keyword)}" placeholder="Search category name" maxlength="50">
             <button type="submit">Search</button>
         </form>
     </div>

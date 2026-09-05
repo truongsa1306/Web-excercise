@@ -84,5 +84,14 @@ public class CategoryServiceImpl implements ICategoryService {
         if (category.getCategoryname() == null || category.getCategoryname().isBlank()) {
             throw new IllegalArgumentException("Ten danh muc khong duoc rong");
         }
+        if (category.getCategoryname().trim().length() > 50) {
+            throw new IllegalArgumentException("Ten danh muc khong duoc vuot qua 50 ky tu");
+        }
+        if (category.getImages() != null && category.getImages().trim().length() > 500) {
+            throw new IllegalArgumentException("Link anh khong duoc vuot qua 500 ky tu");
+        }
+        if (category.getStatus() != 0 && category.getStatus() != 1) {
+            throw new IllegalArgumentException("Trang thai khong hop le");
+        }
     }
 }

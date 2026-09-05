@@ -5,6 +5,7 @@ import com.WebExcersise.entity.User;
 import com.WebExcersise.service.IUserService;
 import com.WebExcersise.service.UserServiceImpl;
 import com.WebExcersise.util.FileUploadUtil;
+import com.WebExcersise.util.FormValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -15,6 +16,7 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Objects;
 
 @MultipartConfig
@@ -46,8 +48,18 @@ public class ProfileController extends HttpServlet {
             }
 
             String oldImage = user.getImages();
-            user.setFullName(request.getParameter("fullName"));
-            user.setPhone(request.getParameter("phone"));
+            String fullName = request.getParameter("fullName");
+            String phone = request.getParameter("phone");
+            user.setFullName(fullName == null ? null : fullName.trim());
+            user.setPhone(phone == null ? null : phone.trim());
+
+            Map<String, String> errors = validateProfile(request);
+            FormValidator.apply(request, errors);
+            if (!errors.isEmpty()) {
+                request.setAttribute("user", user);
+                request.getRequestDispatcher("/views/web/profile.jsp").forward(request, response);
+                return;
+            }
 
             Part imagePart = request.getPart("images");
             String uploadedFileName = FileUploadUtil.saveImage(imagePart, UploadConfig.UPLOAD_DIR);
@@ -75,6 +87,15 @@ public class ProfileController extends HttpServlet {
         }
 
         request.getRequestDispatcher("/views/web/profile.jsp").forward(request, response);
+    }
+
+    private Map<String, String> validateProfile(HttpServletRequest request) {
+        Map<String, String> errors = FormValidator.errors();
+        FormValidator.required(errors, "fullName", request.getParameter("fullName"), "Ho ten khong duoc rong");
+        FormValidator.maxLength(errors, "fullName", request.getParameter("fullName"), 100, "Ho ten khong duoc vuot qua 100 ky tu");
+        FormValidator.maxLength(errors, "phone", request.getParameter("phone"), 20, "So dien thoai khong duoc vuot qua 20 ky tu");
+        FormValidator.phone(errors, "phone", request.getParameter("phone"));
+        return errors;
     }
 
     private User getCurrentUser(HttpServletRequest request, HttpServletResponse response) throws IOException {

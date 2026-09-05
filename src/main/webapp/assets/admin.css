@@ -30,7 +30,8 @@ body {
 
 .nav a,
 .button,
-button {
+.form button,
+.search button {
     display: inline-flex;
     align-items: center;
     min-height: 36px;
@@ -41,6 +42,10 @@ button {
     background: #2563eb;
     text-decoration: none;
     cursor: pointer;
+}
+
+.btn {
+    min-height: 38px;
 }
 
 .button.secondary,
@@ -72,6 +77,23 @@ textarea {
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     background: #ffffff;
+}
+
+input:invalid,
+select:invalid,
+textarea:invalid {
+    box-shadow: none;
+}
+
+.field-error {
+    display: block;
+    margin-top: 6px;
+    color: #b91c1c;
+    font-size: 14px;
+}
+
+.invalid {
+    border-color: #dc3545;
 }
 
 textarea {

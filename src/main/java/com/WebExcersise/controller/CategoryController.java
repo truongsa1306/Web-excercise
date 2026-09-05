@@ -5,6 +5,7 @@ import com.WebExcersise.entity.Category;
 import com.WebExcersise.service.CategoryServiceImpl;
 import com.WebExcersise.service.ICategoryService;
 import com.WebExcersise.util.FileUploadUtil;
+import com.WebExcersise.util.FormValidator;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.Part;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @MultipartConfig
@@ -74,7 +76,11 @@ public class CategoryController extends HttpServlet {
 
         try {
             if (url.contains("/admin/category/insert")) {
-                Category category = readCategoryFromRequest(request, new Category());
+                Category category = bindCategoryFields(request, new Category());
+                if (hasCategoryValidationErrors(request, response, category, false)) {
+                    return;
+                }
+                applyCategoryImage(request, category);
                 categoryService.insert(category);
                 response.sendRedirect(request.getContextPath() + "/admin/categories");
             } else if (url.contains("/admin/category/update")) {
@@ -82,23 +88,35 @@ public class CategoryController extends HttpServlet {
                 Category category = categoryService.findById(categoryId)
                         .orElseThrow(() -> new IllegalArgumentException("Khong tim thay category id: " + categoryId));
                 String oldImage = category.getImages();
-                readCategoryFromRequest(request, category);
+                bindCategoryFields(request, category);
+                if (hasCategoryValidationErrors(request, response, category, true)) {
+                    return;
+                }
+                applyCategoryImage(request, category);
                 categoryService.update(category);
                 if (!Objects.equals(oldImage, category.getImages())) {
                     FileUploadUtil.deleteLocalImage(oldImage, UploadConfig.UPLOAD_DIR);
                 }
                 response.sendRedirect(request.getContextPath() + "/admin/categories");
             }
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException | IOException exception) {
             request.setAttribute("error", exception.getMessage());
-            request.getRequestDispatcher("/views/admin/error.jsp").forward(request, response);
+            forwardCategoryForm(request, response, url.contains("/admin/category/update"));
         }
     }
 
-    private Category readCategoryFromRequest(HttpServletRequest request, Category category) throws IOException, ServletException {
-        category.setCategoryname(request.getParameter("categoryname"));
+    private Category bindCategoryFields(HttpServletRequest request, Category category) {
+        String categoryName = request.getParameter("categoryname");
+        category.setCategoryname(categoryName == null ? null : categoryName.trim());
         category.setStatus(parseInt(request.getParameter("status"), 0));
+        String imageUrl = request.getParameter("images");
+        if (imageUrl != null && !imageUrl.isBlank()) {
+            category.setImages(imageUrl.trim());
+        }
+        return category;
+    }
 
+    private void applyCategoryImage(HttpServletRequest request, Category category) throws IOException, ServletException {
         String imageUrl = request.getParameter("images");
         Part imagePart = request.getPart("images1");
         String uploadedFileName = FileUploadUtil.saveImage(imagePart, UploadConfig.UPLOAD_DIR);
@@ -109,15 +127,47 @@ public class CategoryController extends HttpServlet {
         } else if (category.getImages() == null || category.getImages().isBlank()) {
             category.setImages("avatar.png");
         }
+    }
 
-        return category;
+    private boolean hasCategoryValidationErrors(HttpServletRequest request, HttpServletResponse response, Category category, boolean edit)
+            throws ServletException, IOException {
+        Map<String, String> errors = FormValidator.errors();
+        FormValidator.required(errors, "categoryname", request.getParameter("categoryname"), "Ten danh muc khong duoc rong");
+        FormValidator.maxLength(errors, "categoryname", request.getParameter("categoryname"), 50, "Ten danh muc khong duoc vuot qua 50 ky tu");
+        FormValidator.maxLength(errors, "images", request.getParameter("images"), 500, "Link anh khong duoc vuot qua 500 ky tu");
+        int status = FormValidator.integer(errors, "status", request.getParameter("status"), category.getStatus(), "Trang thai khong hop le");
+        if (status != 0 && status != 1) {
+            errors.putIfAbsent("status", "Trang thai khong hop le");
+        }
+        FormValidator.apply(request, errors);
+        if (errors.isEmpty()) {
+            return false;
+        }
+        request.setAttribute("cate", category);
+        request.getRequestDispatcher(edit ? "/views/admin/category-edit.jsp" : "/views/admin/category-add.jsp").forward(request, response);
+        return true;
+    }
+
+    private void forwardCategoryForm(HttpServletRequest request, HttpServletResponse response, boolean edit) throws ServletException, IOException {
+        Category category = new Category();
+        String categoryId = request.getParameter("categoryid");
+        if (edit && categoryId != null && !categoryId.isBlank()) {
+            category.setCategoryid(parseInt(categoryId, 0));
+        }
+        bindCategoryFields(request, category);
+        request.setAttribute("cate", category);
+        request.getRequestDispatcher(edit ? "/views/admin/category-edit.jsp" : "/views/admin/category-add.jsp").forward(request, response);
     }
 
     private int parseInt(String value, int defaultValue) {
         if (value == null || value.isBlank()) {
             return defaultValue;
         }
-        return Integer.parseInt(value);
+        try {
+            return Integer.parseInt(value.trim());
+        } catch (NumberFormatException exception) {
+            return defaultValue;
+        }
     }
 
     private void configureEncoding(HttpServletRequest request, HttpServletResponse response) throws IOException {

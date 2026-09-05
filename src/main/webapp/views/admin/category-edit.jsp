@@ -38,15 +38,23 @@
 
         <div class="field">
             <label for="categoryname">Category name</label>
-            <input type="text" id="categoryname" name="categoryname" value="${cate.categoryname}" required>
+            <input class="${not empty errors.categoryname ? 'invalid' : ''}" type="text" id="categoryname"
+                   name="categoryname" value="${fn:escapeXml(cate.categoryname)}" maxlength="50" required>
+            <c:if test="${not empty errors.categoryname}">
+                <span class="field-error">${errors.categoryname}</span>
+            </c:if>
         </div>
 
         <div class="field">
             <label for="images">Link images</label>
-            <input type="text" id="images" name="images" value="${cate.images}">
+            <input class="${not empty errors.images ? 'invalid' : ''}" type="text" id="images" name="images"
+                   value="${fn:escapeXml(cate.images)}" maxlength="500">
+            <c:if test="${not empty errors.images}">
+                <span class="field-error">${errors.images}</span>
+            </c:if>
         </div>
 
-        <img class="thumb" src="${imgUrl}" alt="${cate.categoryname}">
+        <img class="thumb" src="${imgUrl}" alt="${fn:escapeXml(cate.categoryname)}">
 
         <div class="field">
             <label for="images1">Upload images</label>
@@ -56,9 +64,12 @@
         <div class="field">
             <label>Status</label>
             <div class="radio-group">
-                <label><input type="radio" name="status" value="1" ${cate.status == 1 ? 'checked' : ''}> Hoạt động</label>
-                <label><input type="radio" name="status" value="0" ${cate.status != 1 ? 'checked' : ''}> Khóa</label>
+                <label><input type="radio" name="status" value="1" ${cate.status == 1 ? 'checked' : ''}> Hoat dong</label>
+                <label><input type="radio" name="status" value="0" ${cate.status != 1 ? 'checked' : ''}> Khoa</label>
             </div>
+            <c:if test="${not empty errors.status}">
+                <span class="field-error">${errors.status}</span>
+            </c:if>
         </div>
 
         <button type="submit">Update</button>
